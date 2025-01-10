@@ -12,17 +12,62 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    private int ProductId;
+    private int productId;
+
     @Column(name = "product_name")
-    private String ProductName;
+    private String productName; // Renamed to camelCase
+
     @Column(name = "price")
-    private int Price;
+    private int price;
+
     @Column(name = "product_quantity")
-    private int ProductQuantity;
+    private int productQuantity;
+
     @Column(name = "thresholdquantity")
-    private int ThresholdQuantity;
+    private int thresholdQuantity;
+
     @OneToMany(mappedBy = "product")
     private Set<Bill_Items> billItems;
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(int productQuantity) {
+        this.productQuantity = productQuantity;
+    }
+
+    public int getThresholdQuantity() {
+        return thresholdQuantity;
+    }
+
+    public void setThresholdQuantity(int thresholdQuantity) {
+        this.thresholdQuantity = thresholdQuantity;
+    }
 
     public Set<Bill_Items> getBillItems() {
         return billItems;
@@ -30,45 +75,5 @@ public class Product {
 
     public void setBillItems(Set<Bill_Items> billItems) {
         this.billItems = billItems;
-    }
-
-    public int getProductId() {
-        return ProductId;
-    }
-
-    public void setProductId(int productId) {
-        ProductId = productId;
-    }
-
-    public String getProductName() {
-        return ProductName;
-    }
-
-    public void setProductName(String productName) {
-        ProductName = productName;
-    }
-
-    public int getPrice() {
-        return Price;
-    }
-
-    public void setPrice(int price) {
-        Price = price;
-    }
-
-    public int getProductQuantity() {
-        return ProductQuantity;
-    }
-
-    public void setProductQuantity(int productQuantity) {
-        ProductQuantity = productQuantity;
-    }
-
-    public int getThresholdQuantity() {
-        return ThresholdQuantity;
-    }
-
-    public void setThresholdQuantity(int thresholdQuantity) {
-        ThresholdQuantity = thresholdQuantity;
     }
 }

@@ -1,25 +1,33 @@
 package com.example.Bill_Genretion_Sysyterm.DTO;
 
 public class Infromation {
-    private String C_name;
-    private  String P_name;
+    private String cname;
+    private  String pname;
+    private int p_quntity;
     private int mobileno;
     private String emailid;
-
-    public String getC_name() {
-        return C_name;
+    public int getP_quntity() {
+        return p_quntity;
     }
 
-    public void setC_name(String c_name) {
-        C_name = c_name;
+    public void setP_quntity(int p_quntity) {
+        this.p_quntity = p_quntity;
     }
 
-    public String getP_name() {
-        return P_name;
+    public String getCname() {
+        return cname;
     }
 
-    public void setP_name(String p_name) {
-        P_name = p_name;
+    public void setCname(String cname) {
+        this.cname = cname;
+    }
+
+    public String getPname() {
+        return pname;
+    }
+
+    public void setPname(String pname) {
+        this.pname = pname;
     }
 
     public int getMobileno() {

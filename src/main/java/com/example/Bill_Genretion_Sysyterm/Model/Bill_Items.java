@@ -18,6 +18,15 @@ public class Bill_Items {
     @ManyToOne
     @JoinColumn(name = "bill_id",nullable = false)
     private Bills bills;
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
     @ManyToOne
     @JoinColumn(name = "product_id")  // Foreign key to Products table
     private Product product;
