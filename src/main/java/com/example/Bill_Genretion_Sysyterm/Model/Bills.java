@@ -21,7 +21,7 @@ public class Bills {
     @Column(name = "final_amount")
     private int FinalAmount;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

@@ -13,7 +13,7 @@ public class Admin {
     private String Name;
     @Column(name = "email")
     private int Email;
-    @Column(name = "mobil_no")
+    @Column(name = "mobil_no",unique = true)
     private int MobilNo;
 
     public int getAdminId() {
