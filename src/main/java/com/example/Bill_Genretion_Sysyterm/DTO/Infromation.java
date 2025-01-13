@@ -1,17 +1,21 @@
 package com.example.Bill_Genretion_Sysyterm.DTO;
 
+import java.util.Map;
+
 public class Infromation {
     private String cname;
-    private  String pname;
-    private int p_quntity;
+    //to get multipal product
+    private Map<String,Integer> product;
     private int mobileno;
     private String emailid;
-    public int getP_quntity() {
-        return p_quntity;
+
+
+    public Map<String, Integer> getProduct() {
+        return product;
     }
 
-    public void setP_quntity(int p_quntity) {
-        this.p_quntity = p_quntity;
+    public void setProduct(Map<String, Integer> product) {
+        this.product = product;
     }
 
     public String getCname() {
@@ -22,13 +26,7 @@ public class Infromation {
         this.cname = cname;
     }
 
-    public String getPname() {
-        return pname;
-    }
 
-    public void setPname(String pname) {
-        this.pname = pname;
-    }
 
     public int getMobileno() {
         return mobileno;
