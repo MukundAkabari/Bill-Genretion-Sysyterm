@@ -15,9 +15,9 @@ import java.util.List;
 public class ProductService {
 
     @Autowired
-    private JavaMailSender mailSender;
+    JavaMailSender mailSender;
     @Autowired
-    static ProductRepository productRepository;
+    ProductRepository productRepository;
 
 
 
@@ -26,20 +26,26 @@ public class ProductService {
        return productRepository.save(p);
     }
 
-    public  void sendProductStockEmail(String toEmail) {
-        List<Product> productStocks = productRepository.findAll();
-        System.out.println();
+    public void sendStockReport(String adminEmail) {
+        // Fetch all products
+        List<Product> products = productRepository.findAll();
+
+        // Create the email content
         StringBuilder emailBody = new StringBuilder("Product Stock Report:\n\n");
-        for (Product product : productStocks) {
-            emailBody.append("Product: ").append(product.getProductName())
-                    .append(" | Stock Quantity: ").append(product.getProductQuantity()).append("\n");
+        for (Product product : products) {
+            emailBody.append("Product ID: ").append(product.getProductId()).append("\n")
+                    .append("Name: ").append(product.getProductName()).append("\n")
+                    .append("Price: ").append(product.getPrice()).append("\n")
+                    .append("Quantity: ").append(product.getProductQuantity()).append("\n")
+                    .append("Threshold Quantity: ").append(product.getThresholdQuantity()).append("\n\n");
         }
 
+        // Create and send the email
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
-        message.setSubject("Product Stock Report");
+        message.setTo(adminEmail);
+        message.setSubject("Stock Report");
         message.setText(emailBody.toString());
 
-         mailSender.send(message);
+        mailSender.send(message);
     }
 }

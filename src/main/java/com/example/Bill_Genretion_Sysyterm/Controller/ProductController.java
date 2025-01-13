@@ -21,7 +21,11 @@ public class ProductController {
     }
     @PostMapping("/stokRepot")
     public String sendStockReport(@RequestParam String adminEmail) {
-        productService.sendProductStockEmail(adminEmail);
-        return "Stock report email sent to " + adminEmail;
+        try {
+            productService.sendStockReport(adminEmail);
+            return "Stock report email sent to " + adminEmail;
+        } catch (Exception e) {
+            return "Error sending email: " + e.getMessage();
+        }
     }
 }
