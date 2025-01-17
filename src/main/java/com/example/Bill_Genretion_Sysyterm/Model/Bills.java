@@ -9,9 +9,9 @@ import java.util.Set;
 @Table(name = "bills")
 public class Bills {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "bill_id")
-    private int BillId;
+    private String  BillId;
     @Column(name = "date")
     private String Date;
     @Column(name = "total_amount")
@@ -28,9 +28,7 @@ public class Bills {
     @OneToMany(mappedBy = "bills")
     private Set<Bill_Items> billItems;
 
-    public int getBillId() {
-        return BillId;
-    }
+
 
     public Set<Bill_Items> getBillItems() {
         return billItems;
@@ -49,8 +47,11 @@ public class Bills {
     }
 
 
+    public String getBillId() {
+        return BillId;
+    }
 
-    public void setBillId(int billId) {
+    public void setBillId(String billId) {
         BillId = billId;
     }
 

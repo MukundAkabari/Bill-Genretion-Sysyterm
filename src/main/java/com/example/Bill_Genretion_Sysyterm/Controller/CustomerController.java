@@ -4,6 +4,7 @@ import com.example.Bill_Genretion_Sysyterm.DTO.Infromation;
 import com.example.Bill_Genretion_Sysyterm.Model.Bills;
 import com.example.Bill_Genretion_Sysyterm.Model.Customer;
 import com.example.Bill_Genretion_Sysyterm.Service.CustomerService;
+import com.razorpay.RazorpayException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,7 @@ public class CustomerController {
     CustomerService customerService;
 
     @PostMapping("C-bill")
-    public void genrete_bill(@RequestBody Infromation i){
+    public void genrete_bill(@RequestBody Infromation i) throws RazorpayException {
         customerService.save(i);
     }
 }
