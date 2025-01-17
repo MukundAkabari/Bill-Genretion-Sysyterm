@@ -6,7 +6,7 @@ public class Infromation {
     private String cname;
     //to get multipal product
     private Map<String,Integer> product;
-    private int mobileno;
+    private String mobileno;
     private String emailid;
 
 
@@ -26,13 +26,11 @@ public class Infromation {
         this.cname = cname;
     }
 
-
-
-    public int getMobileno() {
+    public String getMobileno() {
         return mobileno;
     }
 
-    public void setMobileno(int mobileno) {
+    public void setMobileno(String mobileno) {
         this.mobileno = mobileno;
     }
 

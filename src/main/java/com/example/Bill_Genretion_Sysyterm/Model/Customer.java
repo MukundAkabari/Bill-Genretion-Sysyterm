@@ -12,7 +12,7 @@ public class Customer {
     @Column(name = "coustomer_name", nullable = false)
     private String CoustomerName;
     @Column(name = "mobil_no" , unique = true)
-    private int MobilNo;
+    private String MobilNo;
     @Column(name = "email_id")
     private String EmailId;
 
@@ -43,11 +43,11 @@ public class Customer {
         CoustomerName = coustomerName;
     }
 
-    public int getMobilNo() {
+    public String getMobilNo() {
         return MobilNo;
     }
 
-    public void setMobilNo(int mobilNo) {
+    public void setMobilNo(String mobilNo) {
         MobilNo = mobilNo;
     }
 
