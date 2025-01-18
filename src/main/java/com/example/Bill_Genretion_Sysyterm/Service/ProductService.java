@@ -40,12 +40,12 @@ public class ProductService {
                     .append("Threshold Quantity: ").append(product.getThresholdQuantity()).append("\n\n");
         }
 
-        // Create and send the email
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(adminEmail);
-        message.setSubject("Stock Report");
-        message.setText(emailBody.toString());
-
-        mailSender.send(message);
+        // Create and send the sms
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setTo(adminEmail);
+//        message.setSubject("Stock Report");
+//        message.setText(emailBody.toString());
+//
+//        mailSender.send(message);
     }
 }

@@ -11,7 +11,7 @@ public class Customer {
     private int CoustomerId;
     @Column(name = "coustomer_name", nullable = false)
     private String CoustomerName;
-    @Column(name = "mobil_no" , unique = true)
+    @Column(name = "mobil_no")
     private String MobilNo;
     @Column(name = "email_id")
     private String EmailId;

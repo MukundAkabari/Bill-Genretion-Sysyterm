@@ -18,7 +18,7 @@ public class CustomerController {
     CustomerService customerService;
 
     @PostMapping("C-bill")
-    public void genrete_bill(@RequestBody Infromation i) throws RazorpayException {
+    public void genrete_bill(@RequestBody Infromation i) throws RazorpayException, InterruptedException {
         customerService.save(i);
     }
 }

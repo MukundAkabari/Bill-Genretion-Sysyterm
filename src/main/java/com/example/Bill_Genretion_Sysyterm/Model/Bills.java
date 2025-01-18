@@ -20,10 +20,20 @@ public class Bills {
     private int GstAmount;
     @Column(name = "final_amount")
     private int FinalAmount;
+    @Column(name = "status")
+    private String status;
 
     @OneToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     @OneToMany(mappedBy = "bills")
     private Set<Bill_Items> billItems;

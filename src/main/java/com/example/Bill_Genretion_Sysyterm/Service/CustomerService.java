@@ -10,10 +10,7 @@ import com.example.Bill_Genretion_Sysyterm.Repository.Bill_ItemsRepository;
 import com.example.Bill_Genretion_Sysyterm.Repository.CostomerRepository;
 import com.example.Bill_Genretion_Sysyterm.Repository.ProductRepository;
 
-import com.razorpay.Document;
-import com.razorpay.Order;
-import com.razorpay.RazorpayClient;
-import com.razorpay.RazorpayException;
+import com.razorpay.*;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
@@ -53,14 +50,14 @@ public class CustomerService {
     @Autowired
     JavaMailSender mailSender;
 
-    @Value("${TWILIO_ACCOUNT_SID}")
-            String account_sid;
-
-    @Value("${TWILIO_AUTH_TOCKEN}")
-            String Auth_Token;
-
-    @Value("${TWILIO_OUTGOING_SMS_NUMBER}")
-            String Number;
+//    @Value("${TWILIO_ACCOUNT_SID}")
+//            String account_sid;
+//
+//    @Value("${TWILIO_AUTH_TOCKEN}")
+//            String Auth_Token;
+//
+//    @Value("${TWILIO_OUTGOING_SMS_NUMBER}")
+//            String Number;
 
     int totalAmount = 0;
 
@@ -70,12 +67,13 @@ public class CustomerService {
     @Value("${razorpay.api.secret}")
     private String apiSecret;
 
-    @PostConstruct
-    private void setup(){
-        Twilio.init(account_sid, Auth_Token);
-    }
+    //this constructor for set twilo sid and auth token
+//    @PostConstruct
+//    private void setup(){
+//        Twilio.init(account_sid, Auth_Token);
+//    }
 
-    public void save(Infromation i) throws RazorpayException {
+    public void save(Infromation i) throws RazorpayException, InterruptedException {
         // Create customer
         Customer customer = new Customer();
         customer.setCoustomerName(i.getCname());
@@ -132,13 +130,41 @@ public class CustomerService {
 
         // Integrate Razorpay
         RazorpayClient razorpayClient = new RazorpayClient(apiKey, apiSecret);
-        JSONObject orderRequest = new JSONObject();
-        orderRequest.put("amount", totalAmount * 100); // Amount in paise
-        orderRequest.put("currency", currency);
-        orderRequest.put("receipt", UUID.randomUUID().toString());
+        // this is to create oeder object
+//        JSONObject orderRequest = new JSONObject();
+//        orderRequest.put("amount", totalAmount * 100); // Amount in paise
+//        orderRequest.put("currency", currency);
+//        orderRequest.put("receipt", UUID.randomUUID().toString());
+//
+//        Order order = razorpayClient.orders.create(orderRequest);
+//        String razorpayOrderId = order.get("id");
 
-        Order order = razorpayClient.orders.create(orderRequest);
-        String razorpayOrderId = order.get("id");
+
+
+
+        int formesgamonur=totalAmount+totalGst;
+
+
+        //PaymentLink paymentLink
+
+        JSONObject pymentlinkrequest= new JSONObject();
+        pymentlinkrequest.put("amount",formesgamonur*100);
+        pymentlinkrequest.put("currency",currency);
+        pymentlinkrequest.put("description","pyment for order");
+        pymentlinkrequest.put("customer", new JSONObject()
+                .put("name", i.getCname())
+                .put("email", i.getEmailid())
+                .put("contact", i.getMobileno()));
+        pymentlinkrequest.put("notify", new JSONObject().put("sms", true).put("email", true));
+        pymentlinkrequest.put("callback_url", "https://yourdomain.com/payment/success");
+        pymentlinkrequest.put("callback_method", "get");
+
+// Create Payment Link
+        JSONObject paymentLinkResponse = razorpayClient.paymentLink.create(pymentlinkrequest).toJson();
+        String paymentLinkId = paymentLinkResponse.getString("id"); // Razorpay Payment Link ID
+        String paymentStatus= paymentLinkResponse.getString( "status");
+        String paymentLink = paymentLinkResponse.getString("short_url"); // Get the sh
+
 
         // Create bill
         Bills bills = new Bills();
@@ -147,29 +173,56 @@ public class CustomerService {
         bills.setGstAmount(totalGst);
         bills.setFinalAmount(totalAmount);
         bills.setTotalAmount(totalAmount + totalGst);
-        bills.setBillId(razorpayOrderId); // Set Razorpay order ID
+        bills.setBillId(paymentLinkId);
+        bills.setStatus(paymentStatus);// Set Razorpay order ID
 
         // Set bill to bill items
         for (Bill_Items item : billItemsList) {
             item.setBills(bills);
         }
         customer.setBills(bills);
+
+
+            String status;
+            do {
+                // Fetch the payment link details
+                JSONObject paymentLinkDetails = razorpayClient.paymentLink.fetch(paymentLinkId).toJson();
+                status = paymentLinkDetails.getString("status"); // Status can be "paid", "cancelled", etc.
+
+                if ("paid".equalsIgnoreCase(status)) {
+                    log.info("Payment received for Payment Link ID: {}", paymentLinkId);
+                    break;
+                } else if ("cancelled".equalsIgnoreCase(status)) {
+                    log.warn("Payment link was cancelled: {}", paymentLinkId);
+                    break;
+                }
+
+                // Wait for a few seconds before checking again
+                Thread.sleep(5000); // 5 seconds delay
+
+            } while (!"paid".equalsIgnoreCase(status) && !"cancelled".equalsIgnoreCase(status));
+
+            // Update the bill status in the database
+                bills.setStatus(status.toUpperCase());
+
         // Save all data to tables
+
         costomerRepository.save(customer);
         billRepository.save(bills);
         billItemsRepository.saveAll(billItemsList);
 
 
-        int formesgamonur=totalAmount+totalGst;
+        //this is for test to send msg using twilio
         //send messsge to cutomer
-        StringBuilder smsMessege=new StringBuilder("order complete\n\n");
-        smsMessege.append("you have to paid "+formesgamonur+" and keep shoping for us");
-        Message message = Message.creator(
-                new PhoneNumber("+" + i .getMobileno()), // Target mobile number
-                new PhoneNumber(Number),         // Your Twilio phone number
-                String.valueOf(smsMessege)                       // Message content
-        ).create();
-
+//        StringBuilder smsMessege=new StringBuilder("order complete\n\n");
+//        smsMessege.append("You need to pay ₹").append(totalAmount + totalGst).append(". ")
+//                .append("Please complete your payment using the following link: ").append(paymentLink)
+//                .append("\nThank you for shopping with us!");
+//        Message message = Message.creator(
+//                new PhoneNumber("+" + i .getMobileno()), // Target mobile number
+//                new PhoneNumber(Number),         // Your Twilio phone number
+//                String.valueOf(smsMessege)                       // Message content
+//        ).create();
     }
 }
 
