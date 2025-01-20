@@ -110,21 +110,18 @@ public class CustomerService {
 
             // Update product quantity in the product table
             if(product.getProductQuantity()<product.getThresholdQuantity()) {
-                StringBuilder emailbody=new StringBuilder("Stoke requiment\n\n");
+                StringBuilder emailbody = new StringBuilder("Stoke requiment\n\n");
                 emailbody.append("product name").append(product.getProductName()).append("\n")
-                                .append("price").append(product.getPrice()).append("\n")
-                                .append("Quintity").append(product.getProductQuantity()).append("\n")
-                                .append("Threshold Quantity:").append(product.getThresholdQuantity());
+                        .append("price").append(product.getPrice()).append("\n")
+                        .append("Quintity").append(product.getProductQuantity()).append("\n")
+                        .append("Threshold Quantity:").append(product.getThresholdQuantity());
 
-                SimpleMailMessage message=new SimpleMailMessage();
+                SimpleMailMessage message = new SimpleMailMessage();
                 message.setTo("akabarimukund36@gmail.com");
                 message.setSubject("for Stoke menegment");
                 message.setText(emailbody.toString());
-                try {
-                    mailSender.send(message);
-                }catch (InputMismatchException exception){
-                    exception.getMessage();
-                }
+                mailSender.send(message);
+
             }else {
                 product.setProductQuantity(product.getProductQuantity() - quantity);
             }
@@ -190,6 +187,7 @@ public class CustomerService {
 
 
             String status;
+
             do {
                 // Fetch the payment link details
                 JSONObject paymentLinkDetails = razorpayClient.paymentLink.fetch(paymentLinkId).toJson();
