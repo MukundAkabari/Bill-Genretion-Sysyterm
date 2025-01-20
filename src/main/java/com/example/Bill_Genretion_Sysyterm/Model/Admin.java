@@ -8,20 +8,22 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_id")
-    private int AdminId;
+    private int adminId;
     @Column(name = "name")
     private String Name;
+    @Column(name = "admin_type")
+    private String admin_type;
     @Column(name = "email")
-    private int Email;
+    private String email;
     @Column(name = "mobil_no",unique = true)
-    private int MobilNo;
+    private String mobilNo;
 
     public int getAdminId() {
-        return AdminId;
+        return adminId;
     }
 
     public void setAdminId(int adminId) {
-        AdminId = adminId;
+        this.adminId = adminId;
     }
 
     public String getName() {
@@ -32,19 +34,27 @@ public class Admin {
         Name = name;
     }
 
-    public int getEmail() {
-        return Email;
+    public String getAdmin_type() {
+        return admin_type;
     }
 
-    public void setEmail(int email) {
-        Email = email;
+    public void setAdmin_type(String admin_type) {
+        this.admin_type = admin_type;
     }
 
-    public int getMobilNo() {
-        return MobilNo;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMobilNo(int mobilNo) {
-        MobilNo = mobilNo;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMobilNo() {
+        return mobilNo;
+    }
+
+    public void setMobilNo(String mobilNo) {
+        this.mobilNo = mobilNo;
     }
 }

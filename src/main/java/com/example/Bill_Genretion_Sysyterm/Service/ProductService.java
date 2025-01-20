@@ -4,6 +4,7 @@ import com.example.Bill_Genretion_Sysyterm.Model.Product;
 import com.example.Bill_Genretion_Sysyterm.Repository.AdminRepository;
 import com.example.Bill_Genretion_Sysyterm.Repository.ProductRepository;
 
+import org.antlr.v4.runtime.InputMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -40,12 +41,15 @@ public class ProductService {
                     .append("Threshold Quantity: ").append(product.getThresholdQuantity()).append("\n\n");
         }
 
-        // Create and send the sms
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(adminEmail);
-//        message.setSubject("Stock Report");
-//        message.setText(emailBody.toString());
-//
-//        mailSender.send(message);
+//         Create and send the mail
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(adminEmail);
+        message.setSubject("Stock Report");
+        message.setText(emailBody.toString());
+        try {
+            mailSender.send(message);
+        }catch (InputMismatchException e){
+           e.getMessage();
+        }
     }
 }

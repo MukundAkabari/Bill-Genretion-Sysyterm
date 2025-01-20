@@ -50,14 +50,14 @@ public class CustomerService {
     @Autowired
     JavaMailSender mailSender;
 
-//    @Value("${TWILIO_ACCOUNT_SID}")
-//            String account_sid;
-//
-//    @Value("${TWILIO_AUTH_TOCKEN}")
-//            String Auth_Token;
-//
-//    @Value("${TWILIO_OUTGOING_SMS_NUMBER}")
-//            String Number;
+    @Value("${TWILIO_ACCOUNT_SID}")
+            String account_sid;
+
+    @Value("${TWILIO_AUTH_TOCKEN}")
+            String Auth_Token;
+
+    @Value("${TWILIO_OUTGOING_SMS_NUMBER}")
+            String Number;
 
     int totalAmount = 0;
 
@@ -79,6 +79,8 @@ public class CustomerService {
         customer.setCoustomerName(i.getCname());
         customer.setEmailId(i.getEmailid());
         customer.setMobilNo(i.getMobileno());
+        String mobilnumer=i.getMobileno();
+
 
         String currency = "INR";
 
@@ -118,7 +120,11 @@ public class CustomerService {
                 message.setTo("akabarimukund36@gmail.com");
                 message.setSubject("for Stoke menegment");
                 message.setText(emailbody.toString());
-                mailSender.send(message);
+                try {
+                    mailSender.send(message);
+                }catch (InputMismatchException exception){
+                    exception.getMessage();
+                }
             }else {
                 product.setProductQuantity(product.getProductQuantity() - quantity);
             }
@@ -190,10 +196,40 @@ public class CustomerService {
                 status = paymentLinkDetails.getString("status"); // Status can be "paid", "cancelled", etc.
 
                 if ("paid".equalsIgnoreCase(status)) {
-                    log.info("Payment received for Payment Link ID: {}", paymentLinkId);
+                    // Update the bill status in the database
+                    bills.setStatus(status.toUpperCase());
+
+                    // Save all data to tables
+                    costomerRepository.save(customer);
+                    billRepository.save(bills);
+                    billItemsRepository.saveAll(billItemsList);
+
+                    //send messsge to cutomer pyment is succsess full
+                    StringBuilder smsMessege=new StringBuilder("order complete\n\n");
+                    smsMessege.append("You pay ₹").append(totalAmount + totalGst).append(".")
+                            .append("and your payment is succsess full")
+                            .append("\nThank you for shopping with us!");
+                    Message message = Message.creator(
+                            new PhoneNumber("+" + i .getMobileno()), // Target mobile number
+                            new PhoneNumber(Number),         // Your Twilio phone number
+                            String.valueOf(smsMessege)                       // Message content
+                    ).create();
+
                     break;
                 } else if ("cancelled".equalsIgnoreCase(status)) {
-                    log.warn("Payment link was cancelled: {}", paymentLinkId);
+
+                    // Update the bill status in the database
+                    bills.setStatus(status.toUpperCase());
+
+                    StringBuilder smsMessege=new StringBuilder("order complete\n\n");
+                    smsMessege.append("You need to pay ₹").append(totalAmount + totalGst).append(".")
+                            .append("and your payment is cancelled full")
+                            .append("\nThank you for shopping with us!");
+                    Message message = Message.creator(
+                            new PhoneNumber("+" + i .getMobileno()), // Target mobile number
+                            new PhoneNumber(Number),         // Your Twilio phone number
+                            String.valueOf(smsMessege)                       // Message content
+                    ).create();
                     break;
                 }
 
@@ -202,27 +238,6 @@ public class CustomerService {
 
             } while (!"paid".equalsIgnoreCase(status) && !"cancelled".equalsIgnoreCase(status));
 
-            // Update the bill status in the database
-                bills.setStatus(status.toUpperCase());
-
-        // Save all data to tables
-
-        costomerRepository.save(customer);
-        billRepository.save(bills);
-        billItemsRepository.saveAll(billItemsList);
-
-
-        //this is for test to send msg using twilio
-        //send messsge to cutomer
-//        StringBuilder smsMessege=new StringBuilder("order complete\n\n");
-//        smsMessege.append("You need to pay ₹").append(totalAmount + totalGst).append(". ")
-//                .append("Please complete your payment using the following link: ").append(paymentLink)
-//                .append("\nThank you for shopping with us!");
-//        Message message = Message.creator(
-//                new PhoneNumber("+" + i .getMobileno()), // Target mobile number
-//                new PhoneNumber(Number),         // Your Twilio phone number
-//                String.valueOf(smsMessege)                       // Message content
-//        ).create();
     }
 }
 
