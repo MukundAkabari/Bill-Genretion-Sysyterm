@@ -20,10 +20,10 @@ public class ProductController {
        return productService.save(p);
     }
     @PostMapping("/stokRepot")
-    public String sendStockReport(@RequestParam String adminEmail) {
+    public String sendStockReport() {
         try {
-            productService.sendStockReport(adminEmail);
-            return "Stock report email sent to " + adminEmail;
+            productService.sendStockReport();
+            return "Stock report email sent to " ;
         } catch (Exception e) {
             return "Error sending email: " + e.getMessage();
         }

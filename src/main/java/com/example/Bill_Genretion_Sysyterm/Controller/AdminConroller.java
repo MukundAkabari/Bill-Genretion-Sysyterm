@@ -23,8 +23,5 @@ public class AdminConroller {
     public void chang_thresholdquantity(@RequestParam(value = "name") String name,@RequestParam(value = "Quntity") int Quntity){
         adminService.setthreholequntity(name,Quntity);
         }
-        @DeleteMapping("delete_product")
-    public void delete(@RequestParam(value = "name") String name){
-        adminService.delete(name);
-        }
+
 }

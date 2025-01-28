@@ -35,9 +35,4 @@ public class AdminService {
         productRepository.save(product1);
     }
 
-    public void delete(String name) {
-        Optional<Product> product=productRepository.findByProductName(name);
-        Product product1=product.get();
-        productRepository.delete(product1);
-    }
 }
